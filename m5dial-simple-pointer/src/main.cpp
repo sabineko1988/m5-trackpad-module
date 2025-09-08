@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <M5Dial.h>
 #include <Wire.h>
-#include <webuploader.h>
 
 #define I2C_SLAVE_ADDRESS 0x0B
 
@@ -23,7 +22,6 @@ typedef struct
 #define CMD_POINTER 0x04
 
 volatile simple_pointer_data_t i2c_buf = {0};
-bool webuploader_enabled = false;
 
 unsigned long latest_i2c_connection_time = 0;
 uint8_t latest_i2c_command = CMD_POINTER;
@@ -340,12 +338,6 @@ void setup()
     M5Dial.begin(cfg, true, false);
     mprintf("");
 
-    if (M5Dial.BtnA.isPressed())
-    {
-        webuploader_enabled = true;
-        return;
-    }
-
     Wire.begin(I2C_SLAVE_ADDRESS, G13, G15, 400000);
     Wire.onReceive(i2c_receive_event);
     Wire.onRequest(i2c_send_event);
@@ -353,11 +345,7 @@ void setup()
 
 void loop()
 {
-    if (webuploader_enabled)
-    {
-        webuploader_loop();
-        return;
-    }
+    
     M5Dial.update();
 
     handle_touch();
