@@ -336,6 +336,9 @@ void setup()
 
     auto cfg = M5.config();
     M5Dial.begin(cfg, true, false);
+
+    delay(3000); 
+
     mprintf("");
 
     Wire.begin(I2C_SLAVE_ADDRESS, G13, G15, 400000);
